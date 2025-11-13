@@ -1,2 +1,1 @@
-# Thermal Transport in Al_xGa_{1-x}N using Machine-Learning Interatomic Potential: Impact of Mass and Force-Field Disorder
-
+# Nanoscale Thermal transport in Al<sub>x</sub>Ga<sub>1−x</sub>N using Machine Learned Interatomic Potential
