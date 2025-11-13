@@ -49,25 +49,14 @@ def corr_func(data, corr_len):
     return r2_x, r2_y, r2_z
 
 temp_range = [300]
-sub_path = ["./GK/0.1AlGaN","./GK/0.3AlGaN", "./GK/0.5AlGaN", "./GK/0.7AlGaN", "./GK/0.9AlGaN"]
-# sub_path = ["./GK/AlN", "./GK/GaN"]
-# sub_path = ["./GK_without_NPT/GaN"]
+sub_path = ["./GK/0.1AlGaN"] 
 
 all_seed_ranges = {
-    # "./GK_without_NPT/GaN": np.asarray([3182, 3534, 4595, 4694, 6729]), 
-    # "./GK/AlN": np.asarray([11062, 2314, 3182, 3534, 3848, 4033, 4595, 4609, 4694, 6729]), 
-    # "./GK/GaN": np.asarray([2314, 3182, 3534, 4595, 4694, 6729]), 
     "./GK/0.1AlGaN": np.asarray([2314, 3182, 3534, 4595, 4694, 6729]),
-    "./GK/0.3AlGaN": np.asarray([2314, 3182, 3534, 4595, 4694, 6729]),
-    "./GK/0.5AlGaN": np.asarray([2314, 3182, 3534, 4595, 4694, 6729]),
-    "./GK/0.7AlGaN": np.asarray([2314, 3182, 3534, 4595, 4694, 6729]),
-    "./GK/0.9AlGaN": np.asarray([2314, 3182, 3534, 4595, 4694, 6729]),
     } 
 
 
-vol_array = np.asarray([91713.687, 89949.8, 87958.992, 85885.854, 84040.626]) # for alloys
-# vol_array = np.asarray([82656.061, 92445.87]) # for AlN and GaN
-# vol_array = np.asarray([91949.432]) # for GaN without NPT
+vol_array = np.asarray([91713.687]) # for alloys
 
 sample_freq = 5
 
