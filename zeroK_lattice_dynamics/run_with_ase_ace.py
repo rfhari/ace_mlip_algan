@@ -13,7 +13,6 @@ from phonopy.file_IO import parse_BORN
 # temp = str(300)
 # unitcell = read_crystal_structure("new_minimized_aln_"+temp+"K.unitcell", interface_mode='lammps')
 unitcell = read_crystal_structure('minimized_aln.unitcell', interface_mode='lammps')
-#print(unitcell.scaled_positions())
 print(unitcell[0])
 
 
@@ -27,23 +26,14 @@ ph3.generate_displacements(cutoff_pair_distance=2.5)
 ph3.save("phono3py_disp.yaml")
 print("Generated displacements")
 
-# calc = PyACECalculator('pure_AlN_output_potential.yaml')
 calc = PyACECalculator('hari_AlGaN_v0.yaml')
-
-# list_fc3 = glob.glob('POSCAR-*')
-#print(list_fc3)
-# list_fc2 = glob.glob('POSCAR_FC2-*')
-#print(list_fc2)
-
 forces=[]
 # calc FC2
 for sc in tqdm(ph3.phonon_supercells_with_displacements):
     atoms = Atoms(sc.symbols, cell=sc.cell, positions=sc.positions, pbc=True)
-    # Attach it to the Atmos
     atoms.set_calculator(calc)
     f = atoms.get_forces()
     forces.append(f)
-    # print(forces)
 
 ph3.phonon_forces = np.array(forces)    
 
@@ -59,9 +49,6 @@ write_fc2_to_hdf5(
 )
 
 # # convert fc3
-# for file in list_fc3:
-#     vasp_file = read(file,format='vasp')
-#     write(file+'.lmp',vasp_file,format='lammps-data')
 
 print("Computing forces for FC3")
 
@@ -87,8 +74,3 @@ write_fc3_to_hdf5(
     ph3.fc3,
     p2s_map=ph3.primitive.p2s_map,
 )
-
-# ph3.mesh_numbers = 30
-
-# ph3.init_phph_interaction()
-# ph3.run_thermal_conductivity()
