@@ -103,6 +103,5 @@ Modify the `fraction_al` variable in the scripts to set the Al composition.
 
 ## Citation
 
-## License
-
 ## Contact
+For questions regarding the data or methodology, please contact the corresponding author or open an issue in this repository and tag @rfhari.
