@@ -79,8 +79,6 @@ Calculates thermal conductivity using equilibrium MD:
 - **TDEP**: For temperature-dependent effective potential and phonon calculations at finite temperature
 
 ### Packages
-- `numpy`
-- `matplotlib`
 - `ase`
 - `phonopy`
 - `phono3py`
