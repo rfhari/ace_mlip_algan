@@ -1,0 +1,84 @@
+# Green-Kubo method via compute heat/flux and fix ave/correlate
+
+# settings
+
+log log.AlGaN0.1_cubic_GK_${seed} 
+
+variable    t equal 300
+variable    Tdamp equal 1
+variable    Pdamp equal 1
+variable    Tthermo equal 500
+variable    Teqrun equal 300000
+variable    Trun equal 1000000
+variable    velrand equal ${seed}
+
+# setup problem
+
+units           metal
+atom_style      atomic
+
+read_data      algan_0.1_supercell_npt.lmp
+
+velocity        all create $t ${velrand}
+
+pair_style   pace
+pair_coeff   * * output_potential_aro_1.yace Al Ga N
+
+timestep        0.001
+
+# 1st equilibration run
+
+#fix             1 all npt temp $t $t ${Tdamp} aniso 0.0 0.0 ${Pdamp} 
+fix             1 all nvt temp $t $t ${Tdamp}
+thermo          ${Tthermo}
+thermo_style    custom step temp pe ke press etotal vol lx ly lz
+
+run             ${Teqrun}
+
+unfix           1
+
+#print           "volume after NPT is $(vol) and lattice parameters are $(lx) $(ly) $(lz)"
+
+# thermal conductivity calculation
+
+reset_timestep  0
+
+compute         myKE all ke/atom
+compute         myPE all pe/atom
+compute         myStress all centroid/stress/atom NULL virial
+compute         flux all heat/flux myKE myPE myStress
+variable        Jx equal c_flux[1]/vol
+variable        Jy equal c_flux[2]/vol
+variable        Jz equal c_flux[3]/vol
+variable        Jxc equal c_flux[4]/vol
+variable        Jyc equal c_flux[5]/vol
+variable        Jzc equal c_flux[6]/vol
+
+#fix             1 all nvt temp $t $t ${Tdamp}
+#fix             1 all nve
+
+variable        volunit equal 1e-30
+variable        timeunit equal 1e-12
+variable        eneunit equal 1.602176634e-19
+variable        lengthunit equal 1e-10
+variable        fluxunit equal ${eneunit}*${lengthunit}/${timeunit}
+variable        kb equal 1.380649e-23
+print           "dt is $(dt)"
+
+#run             ${Teqrun}
+#unfix           1
+
+#fix             1 all nvt temp $t $t ${Tdamp}
+fix             1 all nve
+fix 2 all ave/time 5 1 5  v_Jx v_Jy v_Jz file raw_heatcurrent_${seed}.txt ave one
+
+thermo          ${Tthermo}
+thermo_style    custom step temp pe ke press etotal v_Jx v_Jy v_Jz v_Jxc v_Jyc v_Jzc
+
+# dump            1 all custom 20000 ./dumpdir/dump.*.lmp id type element x y z fx fy fz c_myStress[1] c_myStress[2] c_myStress[3] c_myStress[4] c_myStress[5] c_myStress[6] c_myStress[7] c_myStress[8] c_myStress[9] c_myPE c_myKE
+# dump_modify     1 format float %20.15g sort id element N Al Ga
+
+
+run             ${Trun}
+
+# next seed
