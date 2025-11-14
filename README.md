@@ -1,13 +1,13 @@
 # Nanoscale Thermal Transport in Al<sub>x</sub>Ga<sub>1−x</sub>N using Machine Learned Interatomic Potential
 
-This repository contains computational tools and workflows for studying thermal transport properties in Al<sub>x</sub>Ga<sub>1−x</sub>N alloys using the Atomic Cluster Expansion (ACE) machine-learned interatomic potential.
+This repository contains computational tools and workflows for studying phonon thermal transport in Al<sub>x</sub>Ga<sub>1−x</sub>N using the Atomic Cluster Expansion (ACE) based machine-learned interatomic potential.
 
 ## Overview
 
 This project implements a comprehensive computational framework for:
 - **Force constant calculations** using ACE potential at zero temperature
 - **Thermal conductivity calculations** via Green-Kubo molecular dynamics (MD)
-- **Force constant mapping** using Virtual Crystal Approximation (VCA) for alloy systems
+- **TDEP based Force constant mapping** using Virtual Crystal Approximation (VCA) for alloy systems
 - **Format conversion** between different force constant representations (ShengBTE, TDEP)
 
 ## Repository Structure
@@ -22,7 +22,7 @@ ace_mlip_algan/
 │   ├── calculate_force_constants.py        # Calculate FC2 and FC3 using ACE with Phono3py
 │   └── vca_force_constants.ipynb           # Virtual Crystal Approximation for force constants
 │
-├── force_constant_mapping/                  # Force constant mapping and conversion
+├── force_constant_mapping/                  # TDEP Force constant mapping and conversion
 │   ├── map_force_constants_2nd_order.py     # Map 2nd-order force constants (FC2)
 │   ├── map_force_constants_3rd_order.py     # Map 3rd-order force constants (FC3)
 │   ├── utils_fc2.py                         
@@ -47,14 +47,14 @@ ace_mlip_algan/
 Computes harmonic (FC2) and anharmonic (FC3) force constants using the ACE potential:
 - Uses `Phono3py` for generating displacement supercells
 - Calculates forces using `PyACECalculator` (ASE interface)
-- Outputs force constants in HDF5 format compatible with ShengBTE
+- Outputs force constants in HDF5 format
 
 **Main script:** `calculate_force_constants.py`
 
 ### 2. Force Constant Mapping (`force_constant_mapping/`)
 
 Tools for mapping and averaging force constants in alloy systems:
-- **VCA (Virtual Crystal Approximation)**: Combines force constants from AlN and GaN to create Al<sub>x</sub>Ga<sub>1−x</sub>N force constants
+- **VCA (Virtual Crystal Approximation)**: Maps and Combines force constants from AlN and GaN to create VCA-based Al<sub>x</sub>Ga<sub>1−x</sub>N force constants
 - **Format conversion**: Converts between ShengBTE and TDEP force constant formats
 - **Analysis**: Counts and analyzes non-zero force constants
 
@@ -65,9 +65,8 @@ Tools for mapping and averaging force constants in alloy systems:
 ### 3. Green-Kubo MD (`green_kubo_md/`)
 
 Calculates thermal conductivity using equilibrium MD:
-- **LAMMPS simulation**: Runs NVE MD with heat flux calculation
+- **LAMMPS simulation**: Runs EMD with modified many-body heat flux calculation (as proposed by )
 - **Post-processing**: Computes heat current autocorrelation function (HCACF) and thermal conductivity
-- **Statistical analysis**: Handles multiple random seeds for error estimation
 
 **Key files:**
 - `lammps_green_kubo_script.in`: LAMMPS input for Green-Kubo MD
@@ -75,18 +74,17 @@ Calculates thermal conductivity using equilibrium MD:
 
 ## Dependencies
 
-### Packages
-- `numpy`
-- `matplotlib`
-- `ase` (Atomic Simulation Environment)
-- `phonopy`
-- `phono3py`
-- `pyace` (ACE potential interface)
-
-
 ### External Software
 - **LAMMPS**: For molecular dynamics simulations (with PACE potential support)
 - **TDEP**: For temperature-dependent effective potential and phonon calculations at finite temperature
+
+### Packages
+- `numpy`
+- `matplotlib`
+- `ase`
+- `phonopy`
+- `phono3py`
+- `pyace`
 
 ## Usage
 
